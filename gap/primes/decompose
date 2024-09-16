@@ -1,0 +1,18 @@
+DecomposeAbelianGroup := function(G)
+  local orderG, factors, pGroups, p, pSubgroup;
+
+  orderG := Size(G);
+  factors := Factors(orderG);
+  pGroups := [];
+
+  for p in Set(factors) do
+    pSubgroup := SylowSubgroup(G, p);
+    Add(pGroups, pSubgroup);
+  od;
+
+   return List(pGroups, StructureDescription);
+end;
+
+G := AbelianGroup([4, 6]);
+pComponents := DecomposeAbelianGroup(G);
+Print(pComponents);
