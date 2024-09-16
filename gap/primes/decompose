@@ -7,10 +7,11 @@ DecomposeAbelianGroup := function(G)
 
   for p in Set(factors) do
     pSubgroup := SylowSubgroup(G, p);
-    Add(pGroups, pSubgroup);
+    Add(pGroups, AbelianInvariants(pSubgroup));
+    
   od;
 
-   return List(pGroups, StructureDescription);
+   return pGroups;
 end;
 
 G := AbelianGroup([4, 6]);
