@@ -35,7 +35,9 @@ DecomposeAbelianGroup := function(G)
 
   for p in Set(factors) do
     pSubgroup := SylowSubgroup(G, p);
-    Add(pGroups, AbelianInvariants(pSubgroup));
+    val := x -> Valuation(x, p);
+    invs := List(AbelianInvariants(pSubgroup), val);
+    Add(pGroups, invs);
     
   od;
 
@@ -102,10 +104,10 @@ return false;
 
 end;
 
-G := DirectProduct(CyclicGroup(8), CyclicGroup(8), CyclicGroup(80));
+G := DirectProduct(CyclicGroup(8), CyclicGroup(16), CyclicGroup(32));
 
-x := [1, 1, 1];
+x := [2, 4, 4];
 
-y := [5, 5, 5];
+y := [2, 2, 16];
 
 Print(IsAutoImage(x,y));
