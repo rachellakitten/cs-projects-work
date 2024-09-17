@@ -1,0 +1,111 @@
+DecomposeElementIntoPParts := function(G, elem)
+  local pParts, factors, p, invfacts, proj_elem, elem_mod_p, orderG;
+
+  pParts := [];                        
+  orderG := Size(G);                   
+  factors := Set(Factors(orderG));      
+  invfacts := AbelianInvariants(G);     
+
+  for p in factors do
+    proj_elem := [];          
+
+    if p = 2 then
+      for i in [1..Length(elem)] do
+        elem_mod_p := elem[i] mod invfacts[i];  
+        Add(proj_elem, Valuation(elem_mod_p,p)); 
+      od;
+      Add(pParts, proj_elem);           
+
+    else
+      proj_elem := elem[Position(factors, p)] mod p;  
+      Add(pParts, [proj_elem]);          
+    fi;
+
+  od;
+
+  return pParts;
+end;
+
+DecomposeAbelianGroup := function(G)
+  local orderG, factors, pGroups, p, pSubgroup;
+
+  orderG := Size(G);
+  factors := Factors(orderG);
+  pGroups := [];
+
+  for p in Set(factors) do
+    pSubgroup := SylowSubgroup(G, p);
+    Add(pGroups, AbelianInvariants(pSubgroup));
+    
+  od;
+
+   return pGroups;
+end;
+
+pgroupsnf := function(f)
+
+Sort(f, function(a, b)
+  return a[1] < b[1];
+end);
+
+for i in [1..Length(f)] do
+    addi := x -> x + Maximum(0, f[i][2] - f[i][1]);
+    
+    if i < Length(f) then
+        for j in [i+1..Length(f)] do
+            f[j][1] := addi(f[j][1]);  # Apply addi to f[j][1]
+        od;
+    fi;
+od;
+
+final := [];
+
+for i in [1..Length(f)] do
+    Add(final, Minimum(f[i][1], f[i][2]));
+od;
+return final;
+
+end;
+CombineLists := function(list1, list2)
+  return List([1..Length(list1)], i -> List([1..Length(list1[i])], j -> [list1[i][j], list2[i][j]]));
+end;
+
+IsAutoImage := function(x, y)
+decomp := DecomposeAbelianGroup(G);
+
+partsx := DecomposeElementIntoPParts(G, x);
+
+manipx := CombineLists(partsx, decomp);
+
+
+
+for i in [1..Length(manipx)] do 
+    manipx[i] := pgroupsnf(manipx[i]);
+od;
+
+partsy := DecomposeElementIntoPParts(G, y);
+
+manipy := CombineLists(partsy, decomp);
+
+for i in [1..Length(manipy)] do 
+    manipy[i] := pgroupsnf(manipy[i]);
+od;
+
+Print(manipx);
+Print(manipy);
+
+if manipx = manipy then
+    return true;
+fi;
+
+return false; 
+
+end;
+
+G := DirectProduct(CyclicGroup(8), CyclicGroup(8), CyclicGroup(80));
+
+x := [1, 1, 1];
+
+y := [5, 5, 5];
+
+Print(IsAutoImage(x,y));

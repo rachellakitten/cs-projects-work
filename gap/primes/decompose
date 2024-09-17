@@ -14,6 +14,6 @@ DecomposeAbelianGroup := function(G)
    return pGroups;
 end;
 
-G := AbelianGroup([4, 6]);
+G := DirectProduct(CyclicGroup(4), CyclicGroup(6), CyclicGroup(10));
 pComponents := DecomposeAbelianGroup(G);
 Print(pComponents);

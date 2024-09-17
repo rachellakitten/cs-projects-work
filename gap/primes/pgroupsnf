@@ -1,11 +1,11 @@
 f := [[0,2], [1,2], [1,3], [2,3]];
-pgroupsnf := function(f);
+pgroupsnf := function(f)
 
 Sort(f, function(a, b)
   return a[1] < b[1];
 end);
 
-for i in [1..4] do
+for i in [1..Length(f)] do
     addi := x -> x + Maximum(0, f[i][2] - f[i][1]);
     
     if i < Length(f) then
@@ -15,8 +15,12 @@ for i in [1..4] do
     fi;
 od;
 
+final := [];
+
 for i in [1..4] do
-    Print(Minimum(f[i][1], f[i][2]), " ");
+    Add(final, Minimum(f[i][1], f[i][2]));
 od;
+return final;
+
 end;
 pgroupsnf(f);

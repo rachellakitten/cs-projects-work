@@ -1,0 +1,43 @@
+DecomposeElementIntoPParts := function(G, elem)
+  local pParts, factors, p, invfacts, proj_elem, elem_mod_p, orderG;
+
+  pParts := [];                        # List to store the element's p-group parts
+  orderG := Size(G);                   # Get the order of the group G
+  factors := Set(Factors(orderG));      # Set of prime factors of |G|
+  invfacts := AbelianInvariants(G);     # Abelian invariants of the whole group G
+
+  # Iterate over the prime factors of |G|
+  for p in factors do
+    proj_elem := [];                   # List to store the projected element on the p-part
+
+    # Special treatment for the structure of p = 2 part
+    if p = 2 then
+      # Project element onto the 2-part (for C8 x C8 x C16)
+      for i in [1..Length(elem)] do
+        elem_mod_p := elem[i] mod invfacts[i];  # Reduce the element by the respective invariant factor
+        Add(proj_elem, Valuation(elem_mod_p,p));     # Store the mod result in proj_elem
+      od;
+      Add(pParts, proj_elem);           # Store the projected element for the 2-part
+
+    else
+      # For other primes (though not applicable here)
+      proj_elem := elem[Position(factors, p)] mod p;  # Project element mod p
+      Add(pParts, [proj_elem]);          # Store the projected element for this prime part as a list
+    fi;
+
+  od;
+
+  return pParts;
+end;
+
+# Define the group G = C8 x C8 x C16
+G := DirectProduct(CyclicGroup(8), CyclicGroup(8), CyclicGroup(16));
+
+# Define the element x = [1, 1, 1] as an element in G
+x := [1, 1, 1];  # Element as a tuple in G
+
+# Decompose the element x into its p-group parts
+pComponents := DecomposeElementIntoPParts(G, x);
+
+# Print the p-group parts of x
+Print(pComponents);
