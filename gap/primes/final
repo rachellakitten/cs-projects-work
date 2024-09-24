@@ -73,6 +73,7 @@ CombineLists := function(list1, list2)
 end;
 
 IsAutoImage := function(x, y)
+local decomp, partsx, partsy, manipx, manipy;
 decomp := DecomposeAbelianGroup(G);
 
 partsx := DecomposeElementIntoPParts(G, x);
@@ -104,10 +105,10 @@ return false;
 
 end;
 
-G := DirectProduct(CyclicGroup(8), CyclicGroup(16), CyclicGroup(32));
+G := DirectProduct(CyclicGroup(2), CyclicGroup(4));
 
-x := [2, 4, 4];
+x := [0, 2];
 
-y := [2, 2, 16];
+y := [1, 1];
 
 Print(IsAutoImage(x,y));
